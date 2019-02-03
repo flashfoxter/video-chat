@@ -1,5 +1,5 @@
 <h2>Video Chat Frontend</h2>
-<p>Follow the steps below to setup the application.</p>
+<p>Follow the steps below to set up the application.</p>
 <ul>
     <li>Navigate to the "services" directory in the "src" folder.</li>
     <li>Inside the "services" directory, create a new file called: "socket-server-service.js".</li>
