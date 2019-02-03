@@ -13,10 +13,10 @@
             </div>
             <div class="row">
                 <div class="col-12 col-lg-6">
-                    <video ref="local-stream" class="video" width="100%" autoplay />
+                    <video ref="local-stream" class="video" width="100%" />
                 </div>
                 <div class="col-12 col-lg-6">
-                    <video ref="remote-stream" class="video" width="100%" autoplay />
+                    <video ref="remote-stream" class="video" width="100%" />
                 </div>
             </div>
         </div>
@@ -61,6 +61,10 @@ export default {
                 .then((stream) => {
                     this.localStream = stream;
                     this.$refs["local-stream"].srcObject = stream;
+
+                    this.$refs["local-stream"].onloadedmetadata = () => {
+                        this.$refs["local-stream"].play();
+                    };
 
                     this.localStream.getTracks().forEach((track) => {
                         this.peerConnection.addTrack(track, this.localStream);
@@ -115,7 +119,7 @@ export default {
                 this.resetPeerConnection();
             });
 
-            this.socket.on("disconnect", () => {
+            this.socket.on("kick", () => {
                 this.leaveRoom();
             });
         },
@@ -156,13 +160,17 @@ export default {
         getRemoteStream() {
             this.remoteStream = this.peerConnection.getRemoteStreams()[0];
             this.$refs["remote-stream"].srcObject = this.remoteStream;
+
+            this.$refs["remote-stream"].onloadedmetadata = () => {
+                this.$refs["remote-stream"].play();
+            };
         },
         resetPeerConnection() {
-            this.remoteStream.getTracks().forEach((track) => {
-                track.stop();
-            });
-
             this.$refs["remote-stream"].srcObject = null;
+            this.socket.disconnect();
+            this.peerConnection = new RTCPeerConnection(iceServersService)
+            this.setPeerConnectionEvents();
+            this.getLocalStream();
         }
     },
     components: {

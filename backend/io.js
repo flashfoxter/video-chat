@@ -6,7 +6,7 @@ module.exports = (io) => {
             io.in(room).clients((error, clients) => {
                 if (!error) {
                     if (clients.length >= 2) {
-                        socket.disconnect();
+                        socket.emit("kick");
                     }
                     else {
                         socket.join(room, () => {
