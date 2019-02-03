@@ -27,6 +27,7 @@
 import Button from "@/components/Button";
 import videoConstraintsService from "@/services/video-constraints-service";
 import iceServersService from "@/services/ice-servers-service";
+import socketServerService from "@/services/socket-server-service";
 import io from "socket.io-client";
 
 export default {
@@ -77,7 +78,7 @@ export default {
                 });
         },
         connectSocket() {
-            this.socket = io("http://localhost:8081");
+            this.socket = io(socketServerService);
             
             this.socket.on("request-room", () => {
                 this.socket.emit("set-room", this.room);
