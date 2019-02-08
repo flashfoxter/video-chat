@@ -1,25 +1,8 @@
 <template>
-    <div id="wrapper">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div id="room-id-header">Room: {{room}}</div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <Button @click="leaveRoom" id="leave-room" label="Leave" color="blue" />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-lg-6">
-                    <video ref="local-stream" class="video" width="100%" autoplay playsinline />
-                </div>
-                <div class="col-12 col-lg-6">
-                    <video ref="remote-stream" class="video" width="100%" autoplay playsinline />
-                </div>
-            </div>
-        </div>
+    <div>
+        <video ref="local-stream" id="local-stream" autoplay playsinline />
+        <video ref="remote-stream" id="remote-stream" autoplay playsinline />
+        <Button @click="leaveRoom" id="leave-room" label="LEAVE ROOM" color="blue" />
     </div>
 </template>
 
@@ -173,20 +156,26 @@ export default {
 </script>
 
 <style scoped>
-#wrapper {
-    padding: 15px 0px;
+#local-stream {
+    position: fixed;
+    width: 20%;
+    height: 20%;
+    object-fit: cover;
+    top: 0px;
+    right: 0px;
+    z-index: 1;
 }
 
-#room-id-header {
-    font-size: 18px;
-    margin-bottom: 10px;
+#remote-stream {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 #leave-room {
-    margin-bottom: 15px;
-}
-
-.video {
-    margin: 7.5px 0px;
+    position: fixed;
+    top: 0px;
+    left: 0px;
 }
 </style>

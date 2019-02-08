@@ -27,7 +27,6 @@ export default {
     padding: 7.5px 20px;
     border: none;
     outline: none;
-    border-radius: 5px;
     font-size: 16px;
 }
 

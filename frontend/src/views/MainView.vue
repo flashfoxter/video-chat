@@ -43,6 +43,9 @@ export default {
             if (room) {
                 this.room = room;
             }
+            else {
+                this.randomizeRoom();
+            }
         },
         randomizeRoom() {
             this.room = uuid();
