@@ -13,10 +13,10 @@
             </div>
             <div class="row">
                 <div class="col-12 col-lg-6">
-                    <video ref="local-stream" class="video" width="100%" />
+                    <video ref="local-stream" class="video" width="100%" autoplay playsinline />
                 </div>
                 <div class="col-12 col-lg-6">
-                    <video ref="remote-stream" class="video" width="100%" />
+                    <video ref="remote-stream" class="video" width="100%" autoplay playsinline />
                 </div>
             </div>
         </div>
@@ -62,10 +62,6 @@ export default {
                 .then((stream) => {
                     this.localStream = stream;
                     this.$refs["local-stream"].srcObject = stream;
-
-                    this.$refs["local-stream"].onloadedmetadata = () => {
-                        this.$refs["local-stream"].play();
-                    };
 
                     this.localStream.getTracks().forEach((track) => {
                         this.peerConnection.addTrack(track, this.localStream);
@@ -161,10 +157,6 @@ export default {
         getRemoteStream() {
             this.remoteStream = this.peerConnection.getRemoteStreams()[0];
             this.$refs["remote-stream"].srcObject = this.remoteStream;
-
-            this.$refs["remote-stream"].onloadedmetadata = () => {
-                this.$refs["remote-stream"].play();
-            };
         },
         resetPeerConnection() {
             this.$refs["remote-stream"].srcObject = null;
