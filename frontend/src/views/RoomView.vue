@@ -1,6 +1,6 @@
 <template>
     <div>
-        <video ref="local-stream" id="local-stream" autoplay playsinline draggable />
+        <video ref="local-stream" id="local-stream" autoplay playsinline />
         <video ref="remote-stream" id="remote-stream" autoplay playsinline />
         <Button @click="leaveRoom" id="leave-room" label="LEAVE ROOM" color="blue" />
     </div>
@@ -19,13 +19,13 @@ export default {
     },
     data() {
         return {
-            peerConnection: new RTCPeerConnection(iceServersService),
             localStream: {},
             socket: {},
             remoteStream: {}
         };
     },
     created() {
+        window.peerConnection = new RTCPeerConnection(iceServersService);
         this.setPeerConnectionEvents();
         this.getLocalStream();
     },
@@ -47,7 +47,7 @@ export default {
                     this.$refs["local-stream"].srcObject = stream;
 
                     this.localStream.getTracks().forEach((track) => {
-                        this.peerConnection.addTrack(track, this.localStream);
+                        window.peerConnection.addTrack(track, this.localStream);
                     });
 
                     this.connectSocket();
@@ -72,7 +72,7 @@ export default {
             });
 
             this.socket.on("get-answer", (answer) => {
-                this.peerConnection.setRemoteDescription(new RTCSessionDescription(answer))
+                window.peerConnection.setRemoteDescription(new RTCSessionDescription(answer))
                     .then(() => {
                         this.socket.emit("connection-established");
                     })
@@ -82,7 +82,7 @@ export default {
             });
 
             this.socket.on("get-candidate", (candidate) => {
-                this.peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
+                window.peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
                     .then(() => {
                         return;
                     })
@@ -104,47 +104,47 @@ export default {
             });
         },
         sendOffer() {
-            this.peerConnection.createOffer()
+            window.peerConnection.createOffer()
                 .then((offer) => {
-                    return this.peerConnection.setLocalDescription(offer);
+                    return window.peerConnection.setLocalDescription(offer);
                 })
                 .then(() => {
-                    this.socket.emit("send-offer", this.peerConnection.localDescription);
+                    this.socket.emit("send-offer", window.peerConnection.localDescription);
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         },
         sendAnswer(offer) {
-            this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer))
+            window.peerConnection.setRemoteDescription(new RTCSessionDescription(offer))
                 .then(() => {
-                    return this.peerConnection.createAnswer();
+                    return window.peerConnection.createAnswer();
                 })
                 .then((answer) => {
-                    return this.peerConnection.setLocalDescription(answer);
+                    return window.peerConnection.setLocalDescription(answer);
                 })
                 .then(() => {
-                    this.socket.emit("send-answer", this.peerConnection.localDescription);
+                    this.socket.emit("send-answer", window.peerConnection.localDescription);
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         },
         setPeerConnectionEvents() {
-            this.peerConnection.onicecandidate = (event) => {
+            window.peerConnection.onicecandidate = (event) => {
                 if (event.candidate) {
                     this.socket.emit("send-candidate", event.candidate);
                 }
             };
         },
         getRemoteStream() {
-            this.remoteStream = this.peerConnection.getRemoteStreams()[0];
+            this.remoteStream = window.peerConnection.getRemoteStreams()[0];
             this.$refs["remote-stream"].srcObject = this.remoteStream;
         },
         resetPeerConnection() {
             this.$refs["remote-stream"].srcObject = null;
             this.socket.disconnect();
-            this.peerConnection = new RTCPeerConnection(iceServersService)
+            window.peerConnection = new RTCPeerConnection(iceServersService)
             this.setPeerConnectionEvents();
             this.getLocalStream();
         }
