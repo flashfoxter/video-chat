@@ -1,6 +1,6 @@
 <template>
     <div>
-        <video ref="local-stream" id="local-stream" autoplay playsinline />
+        <video ref="local-stream" id="local-stream" autoplay playsinline draggable />
         <video ref="remote-stream" id="remote-stream" autoplay playsinline />
         <Button @click="leaveRoom" id="leave-room" label="LEAVE ROOM" color="blue" />
     </div>
@@ -158,24 +158,26 @@ export default {
 <style scoped>
 #local-stream {
     position: fixed;
+    top: 15px;
+    right: 15px;
     width: 20%;
-    height: 20%;
-    object-fit: cover;
-    top: 0px;
-    right: 0px;
+    border: solid 1.75px black;
+    opacity: 0.65;
     z-index: 1;
 }
 
 #remote-stream {
     position: fixed;
     width: 100%;
+    max-width: 100%;
     height: 100%;
+    max-height: 100%;
     object-fit: cover;
 }
 
 #leave-room {
     position: fixed;
-    top: 0px;
-    left: 0px;
+    top: 15px;
+    left: 15px;
 }
 </style>
