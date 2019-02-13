@@ -6,7 +6,7 @@
                     <div id="header">Video Chat</div>
                 </div>
                 <div id="room-input" class="col-12">
-                    <Input v-model="room" type="text" label="Room" />
+                    <Input v-model="room" type="text" label="Room" placeholder="Type in a room name." />
                 </div>
                 <div class="col-12">
                     <Button @click="joinRoom" class="button" label="JOIN" color="blue" />
@@ -42,9 +42,6 @@ export default {
 
             if (room) {
                 this.room = room;
-            }
-            else {
-                this.randomizeRoom();
             }
         },
         randomizeRoom() {

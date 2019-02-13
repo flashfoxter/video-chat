@@ -1,6 +1,6 @@
 <template>
     <div>
-        <video ref="local-stream" id="local-stream" autoplay playsinline />
+        <video ref="local-stream" id="local-stream" autoplay playsinline muted />
         <video ref="remote-stream" id="remote-stream" autoplay playsinline />
         <Button @click="leaveRoom" id="leave-room" label="LEAVE ROOM" color="blue" />
     </div>
@@ -35,6 +35,7 @@ export default {
         });
 
         this.socket.disconnect();
+        window.peerConnection = null;
     },
     methods: {
         leaveRoom() {
@@ -144,9 +145,15 @@ export default {
         resetPeerConnection() {
             this.$refs["remote-stream"].srcObject = null;
             this.socket.disconnect();
+            window.peerConnection.close();
             window.peerConnection = new RTCPeerConnection(iceServersService)
             this.setPeerConnectionEvents();
-            this.getLocalStream();
+            
+            this.localStream.getTracks().forEach((track) => {
+                window.peerConnection.addTrack(track, this.localStream);
+            });
+
+            this.connectSocket();
         }
     },
     components: {

@@ -18,28 +18,27 @@ module.exports = (io) => {
         });
 
         socket.on("send-offer", (offer) => {
-            const room = Object.keys(socket.rooms).filter((room) => room !== socket.id)[0];
-            socket.in(room).emit("get-offer", offer);
+            socket.in(getRoom(socket)).emit("get-offer", offer);
         });
 
         socket.on("send-answer", (answer) => {
-            const room = Object.keys(socket.rooms).filter((room) => room !== socket.id)[0];
-            socket.in(room).emit("get-answer", answer);
+            socket.in(getRoom(socket)).emit("get-answer", answer);
         });
 
         socket.on("send-candidate", (candidate) => {
-            const room = Object.keys(socket.rooms).filter((room) => room !== socket.id)[0];
-            socket.in(room).emit("get-candidate", candidate);
+            socket.in(getRoom(socket)).emit("get-candidate", candidate);
         });
 
         socket.on("connection-established", () => {
-            const room = Object.keys(socket.rooms).filter((room) => room !== socket.id)[0];
-            io.in(room).emit("ready");
+            io.in(getRoom(socket)).emit("ready");
         });
 
         socket.on("disconnecting", () => {
-            const room = Object.keys(socket.rooms).filter((room) => room !== socket.id)[0];
-            socket.in(room).emit("someone-left");
+            socket.in(getRoom(socket)).emit("someone-left");
         });
     });
+
+    function getRoom(socket) {
+        return Object.keys(socket.rooms).filter((room) => room !== socket.id)[0];
+    }
 };

@@ -1,4 +1,4 @@
 export default {
-    audio: false,
+    audio: true,
     video: true
 };
