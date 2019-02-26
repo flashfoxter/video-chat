@@ -18,7 +18,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .label {
     font-size: 18px;
 }
